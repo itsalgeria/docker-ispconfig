@@ -46,9 +46,16 @@ RUN sed -i "s/{{ SUPERVISOR_PWD }}/${SUPERVISOR_PWD}/g" /etc/supervisor/supervis
 ADD ./fs/etc/cron.daily/sql_backup.sh /etc/cron.daily/sql_backup.sh
 RUN chmod 755 /usr/local/bin/*
 RUN mkdir -p /var/run/sshd /var/log/supervisor /var/run/supervisor
-RUN mv /bin/systemctl /bin/systemctloriginal
-ADD ./fs/bin/systemctl /bin/systemctl
+#RUN mv /bin/systemctl /bin/systemctloriginal
+#ADD ./fs/bin/systemctl /bin/systemctl
 
 # --- 0.3 locales
 RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
     && localedef -i ${LOCALE} -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+# --- 1 Preliminary
+RUN apt-get -y -qq update && apt-get -y -qq install apt-utils && apt-get -y -qq upgrade
+RUN echo "${TIMEZONE}" > /etc/timezone && dpkg-reconfigure tzdata
+RUN apt-get -y -qq update && apt-get -y -qq install rsyslog rsyslog-relp logrotate wget curl python-pip screenfetch && pip install supervisor
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log /var/log/auth.log
