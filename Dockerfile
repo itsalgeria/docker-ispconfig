@@ -18,7 +18,7 @@
 # https://www.howtoforge.com/tutorial/perfect-server-debian-8-4-jessie-apache-bind-dovecot-ispconfig-3-1
 #
 
-FROM debian:jessie
+FROM debian:7
 
 MAINTAINER Loïs PUIG <lois.puig@kctus.fr> version: 0.1
 
